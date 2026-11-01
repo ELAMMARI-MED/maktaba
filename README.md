@@ -15,6 +15,20 @@ frame and every book has its own download button.
       test/                  smoke.mjs (data layer) + ui.mjs (jsdom UI)
     ~/start-maktaba.sh       launcher (binds 0.0.0.0:8112)
 
+## Live demo (GitHub Pages)
+
+https://elammari-med.github.io/maktaba/
+
+GitHub Pages serves static files only, so the site ships its catalog as a file instead of an API:
+`loadCatalog()` tries `api/catalog` first and falls back to `data/catalog.json`. Rebuild the published
+folder after any change to `web/` or the catalog:
+
+    python scripts/build_pages.py      # web/ → docs/, data/catalog.json → docs/data/catalog.json
+    git add -A && git commit -m "pages: rebuild" && git push
+
+The service worker precaches the static catalog, so the demo also works offline after the first visit.
+Pages settings: branch `main`, folder `/docs`.
+
 ## Run
 
     git clone https://github.com/ELAMMARI-MED/maktaba.git

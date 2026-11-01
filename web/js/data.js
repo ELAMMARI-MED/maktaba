@@ -13,8 +13,14 @@ export let SEARCHABLE = true;
 
 export async function loadCatalog() {
   if (CATALOG) return CATALOG;
-  const res = await fetch(API('api/catalog'));
-  if (!res.ok) throw new Error('تعذّر تحميل الفهرس');
+  // خادم بايثون يوفّر /api/catalog، وأي استضافة ثابتة (GitHub Pages) توفّر
+  // data/catalog.json بجانب الصفحة — نجرّب الأول ثم نرتدّ إلى الثاني.
+  let res = null;
+  try { res = await fetch(API('api/catalog')); } catch (e) { res = null; }
+  if (!res || !res.ok || !(res.headers.get('content-type') || '').includes('json')) {
+    res = await fetch(API('data/catalog.json'));
+  }
+  if (!res || !res.ok) throw new Error('تعذّر تحميل الفهرس');
   CATALOG = await res.json();
   buildIndex();
   return CATALOG;

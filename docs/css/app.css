@@ -1,0 +1,1311 @@
+/* مكتبة — app.css
+   Modern green interface · light + dark · RTL-first · responsive
+   ملاحظة مهمة: لا تحذف قاعدة [hidden] أدناه — بدونها يغطّي العارض/النافذة الصفحة كلها. */
+
+/* ---------- 1. الرموز (design tokens) ---------- */
+:root {
+  /* الأخضر أساس الهوية (أخضر زاهي) */
+  --green-50: #eafaf0;
+  --green-100: #d3f5e0;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-900: #14532d;
+  --mint-400: #2dd4bf;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --sans: "Noto Kufi Arabic", "Segoe UI", "Noto Naskh Arabic", "Amiri", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --speed: .16s;
+}
+
+[data-theme="light"] {
+  --bg: #f4faf6;
+  --bg-alt: #e9f4ec;
+  --surface: #ffffff;
+  --surface-2: #f5fbf7;
+  --text: #0d1a12;
+  --muted: #556b5d;
+  --line: #dbe9df;
+  --line-strong: #c3dbcb;
+  --accent: var(--green-700);
+  --accent-strong: var(--green-900);
+  --accent-ghost: #86d3a4;
+  --accent-soft: #e6f7ec;
+  --accent-2: var(--mint-400);
+  --ring: rgba(34, 197, 94, .30);
+  --grad: linear-gradient(135deg, var(--green-600), var(--green-400));
+  --shadow-sm: 0 1px 2px rgba(13, 26, 18, .06);
+  --shadow: 0 6px 20px rgba(13, 26, 18, .08);
+  --shadow-lg: 0 18px 44px rgba(13, 26, 18, .16);
+  --overlay: rgba(13, 26, 18, .5);
+  --chip-bg: rgba(255, 255, 255, .78);
+  --card-glow: 0 10px 30px rgba(22, 163, 74, .16);
+  /* لون لكل قسم من الأقسام الخمسة (الأخضر يبقى الأساس) */
+  --sec-1: #15803d; --sec-2: #0f766e; --sec-3: #1d4ed8; --sec-4: #b45309; --sec-5: #be123c;
+}
+
+[data-theme="dark"] {
+  --bg: #07140f;
+  --bg-alt: #0b1d15;
+  --surface: #102019;
+  --surface-2: #14291f;
+  --text: #e8f5ee;
+  --muted: #9dc2b0;
+  --line: #1e382b;
+  --line-strong: #2b5340;
+  --accent: var(--green-400);
+  --accent-strong: var(--green-500);
+  --accent-ghost: #2b6b47;
+  --accent-soft: #12291d;
+  --accent-2: #2dd4bf;
+  --ring: rgba(74, 222, 128, .35);
+  --grad: linear-gradient(135deg, var(--green-600), var(--mint-400));
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow: 0 8px 24px rgba(0, 0, 0, .45);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, .55);
+  --overlay: rgba(3, 12, 8, .72);
+  --chip-bg: rgba(16, 32, 25, .8);
+  --card-glow: 0 10px 30px rgba(0, 0, 0, .5);
+  /* رمز الكود المستخدم في الشرائح/التوست */
+  --code: #e8f5ee;
+  --sec-1: #4ade80; --sec-2: #2dd4bf; --sec-3: #818cf8; --sec-4: #fbbf24; --sec-5: #fb7185;
+}
+
+/* \u0639\u0642\u062f \u0636\u0631\u0648\u0631\u064a: `hidden` \u064a\u062c\u0628 \u0623\u0646 \u064a\u0641\u0648\u0632 \u0639\u0644\u0649 display \u0641\u064a \u0627\u0644\u0639\u0627\u0631\u0636/\u0627\u0644\u0646\u0627\u0641\u0630\u0629/\u0634\u0631\u064a\u0637 \u0627\u0644\u0623\u062f\u0648\u0627\u062a */
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+html, body {
+  margin: 0; padding: 0; min-height: 100%;
+  background:
+    radial-gradient(900px 420px at 100% -10%, var(--accent-soft), transparent 70%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px; line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+::selection { background: var(--accent); color: #fff; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button, input, select { font-family: inherit; font-size: 1rem; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+
+/* ---------- 2. الشريط العلوي ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px clamp(12px, 2vw, 22px);
+  background: rgba(244, 250, 246, .82);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-block-end: 1px solid var(--line);
+}
+[data-theme="dark"] .topbar { background: rgba(7, 20, 15, .82); }
+
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-weight: 700; }
+.brand:hover { text-decoration: none; }
+.brand-mark {
+  display: grid; place-items: center; width: 38px; height: 38px;
+  border-radius: 12px; background: var(--grad); color: #fff;
+  font-size: 21px; font-weight: 700; box-shadow: var(--card-glow);
+}
+.brand-text { font-size: 1.28rem; letter-spacing: .3px; }
+
+.search {
+  position: relative;
+  flex: 1; display: flex; align-items: center; gap: 6px; max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 6px 4px 12px;
+  transition: border-color var(--speed), box-shadow var(--speed);
+}
+.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring); }
+.search input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; padding: 7px 2px; }
+.search input::placeholder { color: var(--muted); }
+.search input::-webkit-search-cancel-button { display: none; }
+
+.top-actions { display: flex; align-items: center; gap: 8px; margin-inline-start: auto; }
+.pill {
+  background: var(--accent-soft); color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 13px; font-size: .84rem; font-weight: 700; white-space: nowrap;
+}
+
+.icon-btn {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+  width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer;
+  transition: background var(--speed), transform var(--speed), border-color var(--speed), color var(--speed);
+}
+.icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.icon-btn:active { transform: scale(.94); }
+.icon-btn.ghost { border-color: transparent; background: transparent; color: var(--muted); width: 34px; height: 34px; }
+.icon-btn.ghost:hover { background: var(--accent-soft); }
+
+/* ---------- 2b. الأيقونات (SVG خطية، ترث لون النص) ---------- */
+.ico { flex: 0 0 auto; display: inline-block; vertical-align: -.16em; }
+.btn .ico, .chip .ico, .cat-pill .ico, .col-item .ico, .crumbs .ico { opacity: .95; }
+.qbtn .ico, .icon-btn .ico { opacity: 1; }
+.card .meta .ico, .stat .ico { opacity: .8; }
+.cover .noimg .ico, .empty .big .ico, .reader-note .big .ico { stroke-width: 1.4; color: var(--muted); }
+.badge-dup .ico, .badge-folder .count .ico { width: 12px; height: 12px; }
+.link-btn .ico { opacity: .85; }
+.cat-sep { cursor: default; }
+
+/* ---------- 3. التخطيط (بلا قائمة جانبية: شريط أقسام + درج عند الحاجة) ---------- */
+.layout { display: block; max-width: 1500px; margin-inline: auto; min-height: calc(100vh - 200px); }
+.content { padding: 20px clamp(14px, 2.4vw, 30px) 70px; min-width: 0; }
+
+/* زر المجموعات في الشريط العلوي */
+.nav-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--surface); border-radius: 12px;
+  padding: 8px 14px; cursor: pointer; font-size: .88rem; font-weight: 600; white-space: nowrap;
+  transition: all var(--speed);
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.nav-btn .nav-ico { font-size: 1rem; }
+
+/* شريط الأقسام الأفقي */
+.catbar { border-block-end: 1px solid var(--line); background: rgba(233, 244, 236, .5); }
+[data-theme="dark"] .catbar { background: rgba(11, 29, 21, .5); }
+.catbar-inner {
+  display: flex; gap: 8px; align-items: center; overflow-x: auto;
+  padding: 10px clamp(14px, 2.4vw, 30px);
+  max-width: 1500px; margin-inline: auto;
+  scrollbar-width: none;
+}
+.catbar-inner::-webkit-scrollbar { display: none; }
+.cat-pill {
+  display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  border-radius: 999px; padding: 7px 15px; cursor: pointer; font-size: .86rem;
+  transition: all var(--speed);
+}
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+.cat-pill.active { background: var(--grad); border-color: transparent; color: #fff; font-weight: 600; box-shadow: var(--card-glow); }
+.cat-pill .n { font-size: .74rem; opacity: .75; font-variant-numeric: tabular-nums; }
+.cat-sep { width: 1px; height: 22px; background: var(--line); flex: 0 0 auto; margin-inline: 4px; }
+
+/* درج المجموعات */
+.sheet { position: fixed; inset: 0; z-index: 65; background: var(--overlay); display: flex; justify-content: flex-end; backdrop-filter: blur(3px); }
+.sheet-card {
+  width: min(420px, 92vw); height: 100%; overflow: auto;
+  background: var(--surface); border-inline-end: 1px solid var(--line);
+  padding: 18px 18px 40px; box-shadow: var(--shadow-lg);
+  animation: sheet-in .22s ease;
+}
+@keyframes sheet-in { from { transform: translateX(-24px); opacity: .4; } to { transform: none; opacity: 1; } }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sheet-head h3 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+.sheet .hint { margin: 8px 0 14px; }
+
+.collections { display: flex; flex-direction: column; gap: 3px; }
+.col-item {
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: start;
+  padding: 10px 12px; border-radius: 12px; border: 1px solid transparent;
+  background: transparent; cursor: pointer; line-height: 1.35; color: var(--text);
+  transition: background var(--speed), border-color var(--speed);
+}
+.col-item:hover { background: var(--surface-2); border-color: var(--line); }
+.col-item.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+.col-item .emoji { font-size: 1.05rem; }
+.col-item .cname { flex: 1; font-size: .93rem; overflow: hidden; text-overflow: ellipsis; }
+.col-item .cnum {
+  font-size: .74rem; color: var(--muted); background: var(--bg-alt);
+  border-radius: 999px; padding: 1px 9px; font-variant-numeric: tabular-nums;
+}
+.col-item.active .cnum { color: var(--accent-strong); background: var(--surface); }
+
+.side-group {
+  margin: 16px 6px 6px; font-size: .72rem; font-weight: 700; letter-spacing: .6px; color: var(--muted);
+}
+.side-group::after { content: ""; display: block; height: 1px; margin-top: 5px; background: var(--line); }
+
+.side-foot { margin-top: 22px; display: flex; flex-direction: column; gap: 2px; border-block-start: 1px solid var(--line); padding-top: 10px; }
+.link-btn {
+  background: none; border: 0; padding: 9px 8px; text-align: start; cursor: pointer;
+  color: var(--muted); border-radius: 10px; font-size: .9rem;
+  transition: color var(--speed), background var(--speed);
+}
+.link-btn:hover { color: var(--accent); background: var(--surface-2); }
+
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .88rem; color: var(--muted); min-height: 28px; }
+.crumbs button {
+  background: transparent; border: 0; color: var(--accent); cursor: pointer;
+  padding: 3px 8px; border-radius: 9px; font-weight: 600;
+  transition: background var(--speed);
+}
+.crumbs button:hover { background: var(--accent-soft); text-decoration: none; }
+.crumbs .sep { opacity: .45; }
+
+/* ---------- 4. شريط الأدوات والمرشّحات ---------- */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 12px 0 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer; font-size: .84rem; color: var(--text);
+  transition: all var(--speed);
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 4px 14px var(--ring); }
+
+.sort { margin-inline-start: auto; display: flex; align-items: center; gap: 7px; font-size: .86rem; color: var(--muted); }
+.sort select {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 11px;
+  padding: 7px 10px; cursor: pointer; color: var(--text);
+}
+.sort select:hover { border-color: var(--accent); }
+.toggle-view { display: flex; align-items: center; gap: 7px; font-size: .86rem; color: var(--muted); cursor: pointer; }
+.toggle-view input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+/* ---------- 5. الشبكة والبطاقات ---------- */
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.grid.list { grid-template-columns: 1fr; }
+
+.card {
+  position: relative; display: flex; flex-direction: column; gap: 9px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 11px; cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: transform var(--speed) ease, box-shadow var(--speed), border-color var(--speed);
+}
+.card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.card:active { transform: translateY(-1px); }
+
+.cover {
+  position: relative; aspect-ratio: 3 / 4; border-radius: var(--radius);
+  overflow: hidden; display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--bg-alt), var(--surface-2));
+  border: 1px solid var(--line);
+}
+.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover .noimg {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 2.5rem; background: var(--surface-2);
+}
+/* لون النوع يملأ الغلاف: أيقونة بلون النوع لا بالرمادي */
+.cover .noimg .ico { color: inherit; opacity: .9; }
+
+/* غلاف بديل: صفحة عنوان مصغّرة للكتب التي لا تُعرض صورتها */
+.cover-fallback {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 7px;
+  padding: 16px 12px 16px 20px; text-align: center;
+  background: linear-gradient(160deg, var(--bg-alt), var(--surface-2));
+  border-inline-start: 6px solid var(--accent-soft);
+}
+.cover-fallback .cf-spine {
+  position: absolute; inset-block: 0; inset-inline-start: 0; width: 6px;
+  background: var(--grad);
+}
+.cover-fallback .cf-initial {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border-radius: 50%; background: var(--surface); border: 1px solid var(--line-strong);
+  color: var(--accent-strong); font-size: 1.4rem; font-weight: 800;
+}
+.cover-fallback .cf-title {
+  font-size: .78rem; font-weight: 700; line-height: 1.45; color: var(--text);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cover-fallback .cf-author {
+  font-size: .66rem; color: var(--muted); max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* في مربّعات الأقسام الصغيرة: الحرف فقط */
+.sec-cover .cover-fallback { padding: 4px; border-inline-start-width: 3px; gap: 0; }
+.sec-cover .cover-fallback .cf-initial { width: 26px; height: 26px; font-size: .92rem; }
+.sec-cover .cover-fallback .cf-title,
+.sec-cover .cover-fallback .cf-author { display: none; }
+.cover .fmt {
+  position: absolute; inset-inline-start: 8px; inset-block-start: 8px;
+  background: rgba(9, 20, 40, .78); color: #fff; border-radius: 8px;
+  font-size: .66rem; padding: 3px 8px; letter-spacing: .6px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.card .title {
+  font-size: .9rem; font-weight: 600; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card .meta { font-size: .73rem; color: var(--muted); display: flex; justify-content: space-between; gap: 6px; }
+.badge-folder .cover { background: linear-gradient(160deg, var(--accent-soft), var(--surface-2)); }
+.badge-folder .cover .noimg { font-size: 3rem; opacity: .8; }
+.card .count {
+  position: absolute; inset-inline-end: 16px; inset-block-start: 16px;
+  background: var(--grad); color: #fff; border-radius: 999px;
+  font-size: .72rem; font-weight: 700; padding: 3px 10px; box-shadow: var(--card-glow);
+}
+.badge-dup {
+  position: absolute; inset-block-start: 16px; inset-inline-start: 16px;
+  background: rgba(9, 20, 40, .82); color: #fff; border-radius: 999px;
+  font-size: .64rem; font-weight: 600; padding: 3px 9px; backdrop-filter: blur(4px);
+}
+
+/* أزرار سريعة على الغلاف */
+.cover .quick {
+  position: absolute; inset-block-end: 8px; inset-inline-end: 8px;
+  display: flex; gap: 6px; opacity: 0; transform: translateY(4px);
+  transition: opacity var(--speed), transform var(--speed);
+}
+.card:hover .cover .quick, .card:focus-within .cover .quick { opacity: 1; transform: none; }
+.qbtn {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px;
+  background: rgba(9, 20, 40, .82); color: #fff; font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, .22); backdrop-filter: blur(4px);
+  transition: background var(--speed), transform var(--speed);
+}
+.qbtn:hover { background: var(--accent); text-decoration: none; transform: scale(1.06); }
+
+/* ---------- 6. الرئيسية ---------- */
+.grid.home { display: block; }
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface) 62%);
+  border: 1px solid var(--line); border-radius: var(--radius-xl);
+  padding: clamp(22px, 3vw, 34px); margin-bottom: 26px; box-shadow: var(--shadow);
+}
+.hero::after {
+  content: ""; position: absolute; inset-block-start: -60px; inset-inline-start: -40px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: var(--grad); opacity: .16; filter: blur(30px); pointer-events: none;
+}
+.hero h1 {
+  margin: 0 0 8px; font-size: clamp(1.7rem, 5vw, 2.5rem); font-weight: 800;
+  letter-spacing: -.5px; background: var(--grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { margin: 0 0 18px; color: var(--muted); font-size: 1rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.hero-stats { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+.stat {
+  min-width: 116px; padding: 11px 16px; border-radius: var(--radius);
+  background: var(--chip-bg); border: 1px solid var(--line); backdrop-filter: blur(6px);
+}
+.stat b { display: block; font-size: 1.3rem; font-weight: 800; color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .76rem; color: var(--muted); }
+
+.grid-inner { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.sec-title {
+  display: flex; align-items: center; gap: 10px;
+  margin: 30px 0 14px; font-size: 1.1rem; font-weight: 700;
+  padding-inline-start: 12px; border-inline-start: 4px solid var(--accent);
+}
+.sec-title .sec-count { font-size: .76rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 10px; }
+
+/* الأقسام في صناديق: 3 في الصف على الشاشات الواسعة، و2 على الجوال (لا عمود واحد) */
+.sec-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+
+.sec-box {
+  display: flex; flex-direction: column; gap: 11px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  border-block-start: 3px solid var(--accent);
+  padding: 15px 15px 12px; box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--speed), transform var(--speed), border-color var(--speed);
+}
+.sec-box:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--line-strong); }
+.sec-box-head h3 { margin: 0 0 5px; font-size: .98rem; font-weight: 750; line-height: 1.4; }
+.sec-box-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .72rem; color: var(--muted); }
+.sec-box-meta .n { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* أغلفة الكتب: الصفحة الأولى كاملة (contain) لا شريط مقصوص — وصفّ أفقي يمكن سحبه */
+.sec-covers {
+  display: flex; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain;
+  padding: 2px 2px 7px; scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.sec-covers::-webkit-scrollbar { height: 6px; }
+.sec-covers::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+.sec-cover {
+  flex: 0 0 58px; width: 58px; padding: 2px; cursor: pointer; scroll-snap-align: start;
+  background: linear-gradient(160deg, var(--accent-soft), var(--surface-2));
+  border: 1px solid var(--line); border-radius: 10px;
+  transition: transform var(--speed), border-color var(--speed), box-shadow var(--speed);
+}
+.sec-cover:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+.sec-cover .ico { color: var(--accent); }
+.sec-cover img {
+  display: block; width: 100%; aspect-ratio: 3 / 4;
+  object-fit: contain; background: #fff; border-radius: 7px;
+}
+[data-theme="dark"] .sec-cover img { background: #eef3ef; }
+@media (min-width: 1100px) { .sec-cover { flex-basis: 70px; width: 70px; } }
+
+.sec-cols { display: flex; flex-direction: column; gap: 3px; }
+.sec-col {
+  display: flex; align-items: center; gap: 7px; width: 100%; text-align: start;
+  background: transparent; border: 1px solid transparent; border-radius: 10px;
+  padding: 8px; cursor: pointer; color: var(--text); font-size: .82rem; line-height: 1.35;
+  transition: background var(--speed), border-color var(--speed), color var(--speed);
+}
+.sec-col:hover { background: var(--accent-soft); border-color: var(--line); color: var(--accent-strong); }
+.sec-col .ico { color: var(--accent); }
+.sec-col .cname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sec-col .cnum {
+  font-size: .7rem; color: var(--muted); background: var(--bg-alt);
+  border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums;
+}
+
+.cdesc { font-size: .78rem; color: var(--muted); margin: 0; line-height: 1.55; }
+
+.coll-head {
+  margin: 6px 0 20px; padding: 18px 20px; border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--accent); border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface) 70%);
+  box-shadow: var(--shadow-sm);
+}
+.coll-head h2 { margin: 0 0 6px; font-size: 1.2rem; font-weight: 750; }
+.coll-head .meta { display: flex; flex-wrap: wrap; gap: 14px; color: var(--muted); font-size: .8rem; margin-top: 8px; }
+
+/* ---------- 7. أزرار عامة / حالة فارغة / توست ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+  border-radius: 12px; padding: 9px 15px; cursor: pointer; font-size: .88rem; font-weight: 600;
+  transition: all var(--speed);
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+.btn.primary { background: var(--grad); border-color: transparent; color: #fff; box-shadow: var(--card-glow); }
+.btn.primary:hover { filter: brightness(1.06); color: #fff; }
+
+.empty { text-align: center; color: var(--muted); padding: 70px 20px; font-size: 1rem; }
+.empty .big { display: block; margin-bottom: 14px; line-height: 0; }
+.empty .big svg { display: block; margin: 0 auto; filter: drop-shadow(0 8px 18px rgba(21,128,61,.18)); }
+.empty strong { color: var(--text); font-size: 1.06rem; }
+.empty p { margin: 6px 0 0; }
+
+.toast {
+  position: fixed; inset-block-end: 26px; inset-inline-start: 50%; transform: translateX(50%);
+  background: var(--text); color: var(--bg); padding: 11px 20px; border-radius: 999px;
+  box-shadow: var(--shadow-lg); z-index: 90; font-size: .88rem;
+}
+
+.hint.center { text-align: center; margin-top: 30px; }
+.hint code { background: var(--surface-2); border: 1px solid var(--line); border-radius: 7px; padding: 1px 7px; font-family: var(--mono); font-size: .8rem; }
+
+/* ---------- 8. العارض (reader) ---------- */
+.reader { position: fixed; inset: 0; z-index: 70; background: var(--bg); display: flex; flex-direction: column; }
+.reader-bar {
+  display: flex; align-items: center; gap: 12px; padding: 10px clamp(12px, 2vw, 20px);
+  border-block-end: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm);
+}
+.reader-title { flex: 1; font-weight: 700; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reader-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.reader-body { flex: 1; background: var(--surface-2); position: relative; }
+.reader-body iframe { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+.reader-note { padding: 28px; max-width: 760px; margin: 0 auto; text-align: center; color: var(--muted); }
+.reader-note .big { font-size: 3rem; display: block; margin-bottom: 10px; }
+.reader-note .acts { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.reader-note.sub {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 16px; background: var(--accent-soft); color: var(--text);
+  border-block-start: 1px solid var(--line); font-size: .85rem;
+}
+.reader-note.sub .grow { flex: 1; }
+audio, video { width: 100%; max-width: 900px; display: block; margin: 26px auto; }
+
+/* ---------- 9. النافذة ---------- */
+.modal { position: fixed; inset: 0; z-index: 80; background: var(--overlay); display: grid; place-items: center; padding: 18px; backdrop-filter: blur(3px); }
+.modal-card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-xl);
+  max-width: 640px; width: 100%; max-height: 84vh; overflow: auto; box-shadow: var(--shadow-lg);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 20px; border-block-end: 1px solid var(--line);
+  position: sticky; top: 0; background: var(--surface); z-index: 1;
+}
+.modal-head h3 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+.modal-body { padding: 16px 20px 24px; }
+.modal-body table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.modal-body td { padding: 7px 4px; border-block-end: 1px dashed var(--line); }
+.modal-body td:last-child { text-align: end; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- 10. التذييل وشريط التقدّم ---------- */
+.footer {
+  text-align: center; padding: 30px 12px 40px;
+  border-block-start: 1px solid var(--line); background: var(--bg-alt);
+}
+/* اسم المعدّ: واضح وبارز */
+.footer-owner {
+  display: inline-block; margin: 0;
+  font-size: clamp(1.15rem, 3.6vw, 1.5rem); font-weight: 800;
+  letter-spacing: .3px; line-height: 1.4; color: var(--text);
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-radius: 999px; padding: 10px 26px;
+  box-shadow: var(--shadow-sm);
+}
+.footer-owner::selection { background: var(--accent); color: #fff; }
+.progress { position: fixed; inset-block-start: 0; inset-inline-start: 0; height: 3px; background: var(--grad); width: 0; z-index: 99; transition: width .2s; }
+
+/* ---------- 10b. المفضلة · آخر ما قرأت · العرض التدريجي ---------- */
+/* زر القلب على الغلاف */
+.qbtn.fav.on { background: #e11d48; border-color: #fb7185; }
+.icon-btn.on { background: #e11d48; border-color: #fb7185; color: #fff; }
+.card .badge-fav {
+  position: absolute; inset-block-start: 16px; inset-inline-end: 16px;
+  display: grid; place-items: center; width: 26px; height: 26px;
+  border-radius: 999px; background: rgba(225, 29, 72, .94); color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.card .badge-fav .ico { width: 14px; height: 14px; }
+
+/* «عرض المزيد»: عرض تدريجي 60 بطاقة في المرّة بدل رسم مئات البطاقات دفعة واحدة */
+.more-wrap { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; padding: 18px 0 6px; }
+.more-btn { min-width: 240px; justify-content: center; }
+
+/* شرائح أفقية (آخر ما قرأت) */
+.strip { display: flex; gap: 14px; overflow-x: auto; padding-block-end: 8px; }
+.strip > .card { flex: 0 0 clamp(142px, 34vw, 188px); }
+.strip::-webkit-scrollbar { height: 6px; }
+.strip::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+
+/* ---------- 10c. أغلفة الواجهة ---------- */
+.hero > *:not(.hero-mosaic) { position: relative; z-index: 1; }
+/* حزام أغلفة متحرّك: يمرّ بلا انقطاع، والحافتان تتلاشيان.
+   direction: ltr مقصود: في RTL يمتدّ الصف يسارًا فتفرغ النافذة عند التمرير،
+   وهنا يمتدّ يمينًا فيدخل الغلاف من اليمين ويخرج من اليسار (يمين ← يسار). */
+.hero-mosaic {
+  direction: ltr;
+  display: flex; align-items: center;
+  overflow: hidden; margin-bottom: 14px;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.hero-track {
+  direction: ltr;
+  display: flex; flex: none; flex-direction: row; width: max-content;
+  will-change: transform;                       /* الحركة من JS: translate3d كل إطار */
+}
+.hero-cover {
+  flex: 0 0 auto; height: 104px; aspect-ratio: 3 / 4;
+  margin-inline-end: 8px;                       /* بدل gap: يجعل -50% دقيقة */
+  border-radius: 8px; overflow: hidden; background: #fff;
+  border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+/* الغلاف كاملًا داخل الإطار، لا مقصوصًا: contain + خلفية بيضاء للكتاب */
+.hero-cover img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  padding: 3px; background: #fff;
+}
+[data-theme="dark"] .hero-cover img { background: #eef3ef; }
+/* صفحة عنوان مصغّرة داخل الغلاف (بديل الصورة) */
+.cover-fallback.inline {
+  position: static; inset: auto; height: 100%; padding: 6px; gap: 4px;
+  border-inline-start-width: 3px;
+}
+.cover-fallback.inline .cf-initial { width: 26px; height: 26px; font-size: .9rem; }
+.cover-fallback.inline .cf-title { font-size: .58rem; line-height: 1.4; -webkit-line-clamp: 3; }
+.cover-fallback.inline .cf-author { display: none; }
+
+/* واسع: حزام الأغلفة في طرف الصندوق، ويعرض نحو ثلاثة أغلفة */
+@media (min-width: 900px) {
+  .hero-mosaic {
+    /* تثبيت فيزيائي إلى أقصى اليسار: العنصر صار direction:ltr، فـ«inline-end»
+       تعني يمينه هو — وكان الشريط يقفز فوق العنوان. */
+    position: absolute; top: 20px; bottom: 20px; left: 18px; right: auto;
+    width: min(52%, 470px); margin: 0;
+    /* تتلاشى عند المنتصف (جهة العنوان) وتصل حافّة اليسار واضحة */
+    -webkit-mask-image: linear-gradient(to right, #000 80%, transparent);
+    mask-image: linear-gradient(to right, #000 80%, transparent);
+  }
+  .hero-cover { height: 190px; margin-inline-end: 10px; }
+}
+
+/* ---------- 10d. هياكل التحميل ---------- */
+.sk-card {
+  display: flex; flex-direction: column; gap: 9px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 11px;
+}
+.sk-cover { aspect-ratio: 3 / 4; border-radius: var(--radius); }
+.sk-line { height: 10px; border-radius: 6px; }
+.sk-line.short { width: 58%; }
+.sk-cover, .sk-line {
+  background: linear-gradient(90deg, var(--bg-alt) 25%, var(--surface-2) 37%, var(--bg-alt) 63%);
+  background-size: 400% 100%; animation: sk 1.3s ease-in-out infinite;
+}
+@keyframes sk { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .sk-cover, .sk-line { animation: none; } }
+
+/* ---------- 10e. عرض القائمة (صفوف) ---------- */
+.grid.list { grid-template-columns: 1fr; gap: 8px; }
+.grid.list .card {
+  flex-direction: row; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: var(--radius);
+}
+.grid.list .card .cover { flex: 0 0 44px; width: 44px; aspect-ratio: 3 / 4; border-radius: 8px; }
+.grid.list .card .cover .fmt, .grid.list .cover .quick { display: none; }
+.grid.list .card .title { -webkit-line-clamp: 1; font-size: .88rem; }
+.grid.list .card .meta { margin-inline-start: auto; gap: 12px; white-space: nowrap; }
+.grid.list .author-line { flex: 0 0 auto; }
+.grid.list .sec-title { grid-column: 1 / -1; }
+
+/* ---------- 10f. المؤلفون ---------- */
+.author-grid { grid-column: 1 / -1; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.author-chip {
+  display: flex; align-items: center; gap: 8px; text-align: start; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 10px 12px; color: var(--text); font-size: .88rem;
+  transition: all var(--speed);
+}
+.author-chip:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+.author-chip .ico { color: var(--accent); }
+.author-chip .aname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.author-chip .acount {
+  font-size: .72rem; color: var(--muted); background: var(--bg-alt);
+  border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums;
+}
+.card .author-line {
+  display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--accent); font-size: .76rem; text-align: start; max-width: 100%;
+}
+.card .author-line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .author-line:hover { text-decoration: underline; }
+.card .meta .issue { color: var(--accent); font-weight: 600; }
+
+/* ---------- 10g. ألوان الأقسام وشريط العارض ---------- */
+.sec-1 { --sec: var(--sec-1); } .sec-2 { --sec: var(--sec-2); } .sec-3 { --sec: var(--sec-3); }
+.sec-4 { --sec: var(--sec-4); } .sec-5 { --sec: var(--sec-5); }
+.sec-box { border-block-start-color: var(--sec, var(--accent)); }
+.sec-box .sec-box-meta .n, .sec-box .sec-col .ico { color: var(--sec, var(--accent)); }
+.cat-pill.sec-tag { border-inline-start: 3px solid var(--sec, var(--line)); }
+.coll-head.sec-tag { border-inline-start-color: var(--sec, var(--accent)); }
+
+.reader-sub {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+  padding: 8px clamp(12px, 2vw, 20px);
+  background: var(--accent-soft); border-block-end: 1px solid var(--line);
+  font-size: .82rem;
+}
+.reader-sub .muted { color: var(--muted); }
+.linklike {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  background: transparent; border: 1px solid transparent; border-radius: 9px;
+  padding: 4px 8px; color: var(--accent); font-size: .82rem;
+  transition: all var(--speed);
+}
+.linklike:hover { background: var(--surface); border-color: var(--line); }
+.linklike.copy { color: var(--text); }
+.linklike .ico { color: currentColor; }
+
+/* ---------- 10i. اقتراحات البحث ---------- */
+.suggest {
+  position: absolute; inset-block-start: calc(100% + 6px); inset-inline: 0; z-index: 60;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); max-height: 62vh; overflow: auto; padding: 6px;
+}
+.sug-head { font-size: .7rem; color: var(--muted); font-weight: 700; padding: 7px 8px 3px; letter-spacing: .4px; }
+.sug {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: start;
+  background: transparent; border: 0; border-radius: 9px; padding: 7px 8px;
+  cursor: pointer; color: var(--text); font-size: .86rem;
+}
+.sug:hover, .sug:focus-visible { background: var(--accent-soft); }
+.sug .ico { color: var(--accent); }
+.sug .sname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sug .sn { font-size: .72rem; color: var(--muted); max-width: 42%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- 10h. الأعمال متعددة المجلدات + المكرّرات ---------- */
+.work-card { border-color: var(--accent); }
+.work-card .cover .fmt { background: rgba(21, 128, 61, .92); }
+.card .work-toggle {
+  display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+  background: transparent; border: 1px dashed var(--line); border-radius: 9px;
+  padding: 4px 9px; cursor: pointer; color: var(--accent); font-size: .74rem;
+  transition: all var(--speed);
+}
+.card .work-toggle:hover { background: var(--accent-soft); border-style: solid; }
+.card.vol-child { border-inline-start: 3px solid var(--accent); }
+.dup-list { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 12px; }
+.dup-group {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 12px 14px; box-shadow: var(--shadow-sm);
+}
+.dup-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.dup-head b { font-size: .92rem; }
+.dup-count {
+  font-size: .72rem; color: var(--muted); background: var(--bg-alt);
+  border-radius: 999px; padding: 1px 9px; font-variant-numeric: tabular-nums;
+}
+.dup-copies { display: flex; flex-direction: column; gap: 6px; }
+.dup-copy {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 6px 8px; border-radius: var(--radius); border: 1px solid transparent;
+}
+.dup-copy:hover { background: var(--surface-2); border-color: var(--line); }
+.dup-copy.pref { background: var(--accent-soft); border-color: var(--accent); }
+.dup-open {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+  text-align: start; background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--text); font-size: .85rem;
+}
+.dup-open .ico { color: var(--accent); }
+.dup-open .cname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dup-open .cnum, .dup-open .cdate { font-size: .72rem; color: var(--muted); }
+.linklike.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ---------- 11. الاستجابة للشاشات ---------- */
+@media (max-width: 900px) {
+  .grid, .grid-inner { grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 12px; }
+  .sec-grid { gap: 12px; }
+  .brand-text { display: none; }
+  .sort { margin-inline-start: 0; }
+  .cover .quick { opacity: 1; transform: none; }
+  .nav-label { display: none; }
+  .author-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .dup-open .cdate { display: none; }
+  .nav-btn { padding: 8px 11px; }
+}
+@media (max-width: 560px) {
+  .topbar { gap: 8px; padding: 8px 12px; }
+  /* الجوال: صندوقان في الصف — أغلفة أصغر ونص مضغوط */
+  .sec-grid { gap: 10px; }
+  .sec-box { padding: 11px 11px 9px; gap: 9px; border-radius: var(--radius); }
+  .sec-box-head h3 { font-size: .86rem; }
+  .sec-box-meta { font-size: .66rem; gap: 3px 7px; }
+  .sec-covers { gap: 5px; padding-bottom: 5px; }
+  .sec-cover { flex-basis: 52px; width: 52px; }
+  .sec-col { font-size: .76rem; padding: 7px 6px; gap: 5px; }
+  .sec-col .cnum { padding: 1px 5px; font-size: .62rem; }
+  /* في الصندوق الضيّق: بلا أيقونة، والاسم يلتفّ على سطرين بدل أن يُقتطع */
+  .sec-col .ico { display: none; }
+  .sec-col .cname { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .grid, .grid-inner { grid-template-columns: repeat(2, 1fr); }
+  .card .title { font-size: .85rem; -webkit-line-clamp: 4; }
+  .hero { padding: 20px 18px; border-radius: var(--radius-lg); }
+  .stat { min-width: 96px; padding: 9px 12px; }
+  .stat b { font-size: 1.1rem; }
+  .reader-actions .btn { padding: 8px 11px; font-size: .82rem; }
+  .pill { display: none; }
+}
+@media print { .topbar, .catbar, .toolbar, .footer, .progress { display: none; } }
+
+/* ---------- 12. Polesan visual ---------- */
+/* 3. Indikasi overflow catbar: bayangan tepi kiri/kanan */
+.catbar { position: relative; }
+.catbar::before, .catbar::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 28px; z-index: 1;
+  pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.catbar::before { inset-inline-start: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.catbar::after { inset-inline-end: 0; background: linear-gradient(to left, var(--bg), transparent); }
+.catbar.scroll-start::before, .catbar.scroll-end::after { opacity: 1; }
+
+/* 4. Cover hover zoom */
+.card .cover img { transition: transform .3s ease; }
+.card:hover .cover img { transform: scale(1.03); }
+
+/* 6. Warna fallback per jenis file */
+.cover .noimg.pdf   { color: var(--sec-1); background: color-mix(in srgb, var(--sec-1) 12%, var(--surface)); }
+.cover .noimg.audio { color: #b45309; background: #fef3e2; }
+.cover .noimg.video { color: #7c3aed; background: #f3e8ff; }
+.cover .noimg.doc   { color: #1d4ed8; background: #e8efff; }
+.cover .noimg.archive { color: #b45309; background: #fef3e2; }
+[data-theme="dark"] .cover .noimg.pdf   { color: var(--green-400); background: #12291d; }
+[data-theme="dark"] .cover .noimg.audio { color: #fbbf24; background: #2a2110; }
+[data-theme="dark"] .cover .noimg.video { color: #c4b5fd; background: #241b33; }
+[data-theme="dark"] .cover .noimg.doc   { color: #93c5fd; background: #102033; }
+[data-theme="dark"] .cover .noimg.archive { color: #fbbf24; background: #2a2110; }
+
+/* 7. Glass reader bar */
+.reader-bar {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+}
+
+/* 8. Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+* { scrollbar-color: var(--line-strong) transparent; }
+
+/* 9. Footer gradient */
+.footer { background: var(--bg); }
+.footer::before {
+  content: ""; display: block; width: 64px; height: 2px;
+  background: var(--grad); margin: 0 auto 14px; border-radius: 999px;
+}
+.footer-owner {
+  background: none; border: none; box-shadow: none;
+  background: var(--grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 12. Toast redesign */
+.toast {
+  inset-inline-start: 0; inset-inline-end: 0; margin-inline: auto;
+  width: fit-content; max-width: min(92vw, 520px);
+  inset-block-end: 30px; padding: 12px 22px 12px 18px;
+  display: flex; align-items: center; gap: 9px;
+  border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden;
+  transform: none;
+}
+.toast[hidden] { display: none; }
+.toast.in { animation: toast-in .25s cubic-bezier(.2,.9,.3,1.2); }
+.toast::before { content: "✓"; font-weight: 800; opacity: .85; }
+/* شريط رفيع يتناقص = يبيّن الوقت المتبقّي قبل الاختفاء */
+.toast::after {
+  content: ""; position: absolute; inset-block-end: 0; inset-inline: 0;
+  height: 2px; background: var(--grad); opacity: .55;
+  transform-origin: var(--bar-from, right); transform: scaleX(0);
+}
+.toast.in::after { animation: toast-bar var(--toast-ms, 2200ms) linear forwards; }
+@keyframes toast-in { from { transform: translateY(12px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes toast-bar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* 1. Staggered card entrance */
+.card { animation: card-in .3s ease backwards; }
+@keyframes card-in { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* 1. تأخير متتالٍ: JS يضع --i = 0..11 على أول 12 بطاقة فقط */
+.card { animation-delay: calc(var(--i, 0) * 30ms); }
+
+/* 10. prefers-reduced-motion: matikan semua animasi dekoratif */
+@media (prefers-reduced-motion: reduce) {
+  .card, .toast { animation: none !important; }
+  .card:hover { transform: none; }
+  .card:hover .cover img { transform: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ==================== 13. واجهة 2026: شريط سفلي، مرشّحات، سلاسل، تحديد ==================== */
+
+/* --- تخطّي إلى المحتوى (لوحة المفاتيح) --- */
+.skip-link {
+  position: fixed; inset-inline-start: 10px; top: -70px; z-index: 200;
+  background: var(--accent); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 12px 12px; font-size: .88rem; font-weight: 700;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 0; text-decoration: none; color: #fff; }
+
+/* --- أزرار أدوات صغيرة في شريط التصفّح --- */
+.btn.small { padding: 7px 12px; font-size: .82rem; border-radius: 11px; gap: 6px; }
+.tools-btn { margin-inline-start: 0; }
+.tools-btn.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+#filtersBtn { margin-inline-start: auto; }
+#filtersBtn + .tools-btn { margin-inline-start: 0; }
+.fbtn-n {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px;
+  padding: 0 5px; border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: .68rem; font-weight: 700;
+}
+
+/* --- شريط الحروف في الشبكة --- */
+.chips.letters { width: 100%; gap: 4px; }
+.chip.tiny {
+  padding: 3px 8px; font-size: .74rem; min-width: 28px; justify-content: center;
+  border-radius: 8px;
+}
+
+/* --- حجم البطاقات (كثافة) --- */
+.grid:not(.list)[data-density="sm"] { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); }
+.grid:not(.list)[data-density="md"] { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.grid:not(.list)[data-density="lg"] { grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); }
+.grid[data-density="sm"] .grid-inner { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); }
+.grid[data-density="lg"] .grid-inner { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.grid[data-density="lg"] .cover .fmt { font-size: .7rem; }
+
+/* --- شارة «جديد» ونقطة حالة القراءة --- */
+.badge-new {
+  position: absolute; inset-block-end: 10px; inset-inline-start: 10px; z-index: 3;
+  background: var(--grad); color: #fff; border-radius: 999px;
+  font-size: .64rem; font-weight: 700; padding: 2px 9px;
+  box-shadow: var(--card-glow); letter-spacing: .2px;
+}
+.cover .status-dot {
+  position: absolute; inset-block-start: 8px; inset-inline-end: 8px; z-index: 3;
+  width: 11px; height: 11px; border-radius: 50%;
+  border: 2px solid var(--surface); box-shadow: 0 1px 4px rgba(0, 0, 0, .35);
+}
+.cover .status-dot.reading { background: #f59e0b; }
+.cover .status-dot.done { background: var(--accent-2); }
+
+/* --- وضع «تحديد» --- */
+.card .pick {
+  position: absolute; inset-block-start: 8px; inset-inline-start: 8px; z-index: 4;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--line-strong);
+  display: grid; place-items: center; color: transparent;
+  transition: background var(--speed), border-color var(--speed), color var(--speed);
+}
+.card.selectable .cover .fmt { display: none; }
+.card.selectable .cover .quick { display: none; }
+.card.picked { border-color: var(--accent); box-shadow: 0 0 0 2px var(--ring) inset; }
+.card.picked .pick { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* --- الشريط السفلي (جوال) --- */
+.bulkbar {
+  position: fixed; inset-inline: 12px; bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 61; display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap; padding: 8px 12px;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  border-radius: 16px; box-shadow: var(--shadow-lg);
+}
+.bulk-count { font-size: .84rem; font-weight: 700; color: var(--accent-strong); }
+.bulkbar .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+
+/* --- ورقة سفلية للمرشّحات --- */
+.sheet.bottom { align-items: flex-end; justify-content: center; }
+.sheet.bottom .sheet-card {
+  margin: 0; width: min(560px, 100%); max-height: 86vh;
+  border-radius: 20px 20px 0 0;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  animation: sheet-up .22s ease;
+}
+@keyframes sheet-up { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+.field { display: flex; flex-direction: column; gap: 7px; margin: 0 0 14px; }
+.field-label { font-size: .8rem; font-weight: 600; color: var(--muted); }
+.field select {
+  width: 100%; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--text); font: inherit; font-size: .9rem;
+}
+.field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg {
+  display: flex; gap: 3px; padding: 3px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--line);
+}
+.seg-btn {
+  flex: 1; border: 0; background: transparent; cursor: pointer;
+  padding: 8px 10px; border-radius: 999px; font: inherit; font-size: .84rem;
+  color: var(--muted); transition: background var(--speed), color var(--speed);
+}
+.seg-btn:hover { color: var(--accent); }
+.seg-btn.on { background: var(--grad); color: #fff; font-weight: 600; }
+
+/* --- صفحة السلاسل --- */
+.series-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.series-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg);
+  background: var(--surface); cursor: pointer; text-align: start;
+  font: inherit; color: var(--text); box-shadow: var(--shadow-sm);
+  transition: transform var(--speed), box-shadow var(--speed), border-color var(--speed);
+}
+.series-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow); }
+.series-card .sc-covers { display: flex; gap: 6px; margin-bottom: 4px; }
+.series-card .sc-covers img {
+  width: 46px; height: 62px; object-fit: cover; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--surface-2);
+}
+.series-card .sc-name {
+  display: flex; align-items: center; gap: 7px;
+  font-weight: 700; font-size: .95rem; line-height: 1.45; color: var(--text);
+}
+.series-card .sc-name .ico { color: var(--accent); }
+.series-card .sc-meta { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); }
+.series-card .sc-meta .dot { opacity: .5; }
+
+/* --- شريط «جديد منذ آخر زيارة» --- */
+.whatsnew {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 2px 0 20px; padding: 10px 14px;
+  background: var(--accent-soft); border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.whatsnew .wn-ico { color: var(--accent); display: inline-flex; }
+.whatsnew .wn-text { flex: 1; min-width: 160px; font-size: .9rem; font-weight: 600; }
+
+/* --- أزرار الحالة الفارغة --- */
+.empty-acts { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+
+/* شارة «قيد القراءة: N» بجانب عنوان آخر ما قرأت */
+.sec-title .sec-note {
+  font-size: .72rem; font-weight: 700; color: #b45309;
+  background: #fef3e2; border-radius: 999px; padding: 2px 10px;
+}
+[data-theme="dark"] .sec-title .sec-note { color: #fbbf24; background: #2a2110; }
+
+/* --- قائمة العارض الثانوية --- */
+.reader-actions { position: relative; }
+.reader-menu {
+  position: absolute; inset-block-start: calc(100% + 8px); inset-inline-end: 0; z-index: 8;
+  min-width: 220px; padding: 6px; display: flex; flex-direction: column; gap: 2px;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  border-radius: 14px; box-shadow: var(--shadow-lg);
+}
+.menu-item {
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  padding: 9px 10px; border: 0; border-radius: 10px; background: transparent;
+  font: inherit; font-size: .86rem; color: var(--text); cursor: pointer; text-align: start;
+}
+.menu-item:hover { background: var(--accent-soft); color: var(--accent-strong); }
+.menu-item .ico { opacity: .85; }
+.menu-item.on { color: var(--accent-strong); background: var(--accent-soft); font-weight: 700; }
+.modal-body kbd {
+  display: inline-block; min-width: 28px; text-align: center;
+  padding: 2px 7px; border-radius: 7px; border: 1px solid var(--line-strong);
+  background: var(--surface-2); font-family: var(--mono); font-size: .78rem;
+}
+
+/* --- رأس مضغوط عند التمرير --- */
+.brand-text { white-space: nowrap; overflow: hidden; transition: max-width .2s ease, opacity .2s ease; }
+.scrolled .topbar { padding-block: 6px; box-shadow: var(--shadow-sm); }
+.scrolled .brand-text { max-width: 0; opacity: 0; }
+.scrolled .catbar-inner { padding-block: 6px; }
+
+/* --- جوال: الشريط السفلي + مساحة أسفله --- */
+@media (max-width: 760px) {
+  .bulkbar { bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .reader-bar { padding: 8px 10px; gap: 8px; }
+  .reader-actions { gap: 6px; }
+  .reader-actions .btn { padding: 7px 10px; font-size: .8rem; }
+}
+@media (max-width: 430px) {
+  .reader-actions .btn span { font-size: .76rem; }
+}
+
+/* --- تقليل الحركة يشمل كل ما أُضيف --- */
+@media (prefers-reduced-motion: reduce) {
+  /* الحزام يبقى متحرّكًا دائمًا (طلبه صاحب المكتبة) — الحركة في JS لا في CSS */
+  .sheet.bottom .sheet-card { animation: none; }
+  .series-card:hover { transform: none; }
+  .bulkbar { transition: none; }
+}
+
+/* ==================== 14. التذييل: لوحة خضراء أنيقة ==================== */
+.footer {
+  position: relative; margin-top: 6px; text-align: center;
+  padding: 34px 18px calc(38px + env(safe-area-inset-bottom));
+  border-block-start: 1px solid var(--line);
+  background:
+    radial-gradient(120% 150% at 50% -10%, var(--accent-soft) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-alt), var(--bg));
+  overflow: hidden;
+}
+.footer::before {
+  content: ""; position: absolute; inset-block-start: 0; inset-inline: 0;
+  height: 3px; background: var(--grad); opacity: .95;
+}
+.footer::after {   /* هالة خفيفة تحت الشعار */
+  content: ""; position: absolute; inset-block-start: -60px; inset-inline-start: 50%;
+  width: 320px; height: 160px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, var(--ring), transparent 72%);
+  pointer-events: none; opacity: .55;
+}
+.footer-mark {
+  position: relative; z-index: 1;
+  display: inline-grid; place-items: center; width: 38px; height: 38px;
+  margin-bottom: 12px; border-radius: 12px;
+  background: var(--grad); color: #fff;
+  box-shadow: var(--card-glow);
+}
+.footer-mark .ico { stroke-width: 1.9; }
+.footer-owner {
+  position: relative; z-index: 1;
+  max-width: 700px; margin: 0 auto; padding: 0;
+  font-size: clamp(.92rem, 2.5vw, 1.02rem); font-weight: 600;
+  line-height: 2; letter-spacing: 0; color: var(--text);
+  background: none; background-clip: border-box;
+  border: 0; border-radius: 0; box-shadow: none;
+  -webkit-text-fill-color: currentColor;
+  text-wrap: balance;
+}
+.footer-name {
+  font-weight: 800; padding-inline: 3px;
+  background: var(--grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.footer-name::selection { -webkit-text-fill-color: #fff; background: var(--accent); }
+
+@media (max-width: 480px) {
+  .footer { padding: 26px 16px calc(30px + env(safe-area-inset-bottom)); }
+  .footer-owner { font-size: .9rem; line-height: 1.95; }
+}
+
+/* ==================== 15. تذييل رفيع بخلفية ملوّنة ==================== */
+.footer {
+  position: relative; margin-top: 0; text-align: center;
+  padding: 13px 18px calc(13px + env(safe-area-inset-bottom));
+  border-block-start: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent-soft) 88%, var(--accent-ghost)) 0%,
+    var(--accent-soft) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45);
+  overflow: hidden;
+}
+[data-theme="dark"] .footer {
+  background: linear-gradient(180deg,
+    var(--accent-soft) 0%,
+    color-mix(in srgb, var(--accent-soft) 72%, var(--bg)) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+.footer::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: 0; height: 3px; background: var(--grad); opacity: 1; }
+.footer::after { display: none; }
+
+.footer-owner {
+  position: relative; z-index: 1;
+  max-width: 820px; margin: 0 auto; padding: 0;
+  font-size: clamp(.84rem, 2.2vw, .95rem); font-weight: 600;
+  line-height: 1.7; color: var(--text); letter-spacing: 0;
+  background: none; background-clip: border-box; border: 0; border-radius: 0; box-shadow: none;
+  -webkit-text-fill-color: currentColor;
+  text-wrap: balance;
+}
+.footer-mark {
+  display: inline-grid; place-items: center; vertical-align: -.3em;
+  width: 26px; height: 26px; margin: 0; margin-inline-end: 7px;
+  border-radius: 8px; background: var(--grad); color: #fff;
+  box-shadow: var(--card-glow);
+}
+.footer-mark .ico { width: 15px; height: 15px; stroke-width: 2; }
+.footer-name { font-weight: 800; padding-inline: 3px; }
+
+@media (max-width: 480px) {
+  .footer { padding: 12px 14px calc(12px + env(safe-area-inset-bottom)); }
+  .footer-owner { font-size: .84rem; line-height: 1.65; }
+  .footer-mark { width: 24px; height: 24px; }
+}
+
+/* شريحة الحرف النشِط في المسار */
+.crumbs .crumb-letter {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--accent-soft); border: 1px solid var(--line-strong);
+  color: var(--accent-strong); font-weight: 700;
+}
+.crumbs .crumb-letter:hover { border-color: var(--accent); }
+
+/* ==================== 16. هوية بصرية: ورق، حبيبات، خطوط، ظلال، لمسات ==================== */
+
+/* --- رموز إضافية: ورق دافئ، نسخي للنصوص، حبيبات، درجات حركة --- */
+:root {
+  /* حبيبات ورقية خفيفة (SVG مضمّن: بلا طلب شبكة) */
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.055'/></feComponentTransfer></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+  --serif: "Noto Naskh Arabic", "Amiri", "Noto Naskh", serif;
+  --speed-chip: .12s;
+  --speed-card: .16s;
+  --speed-sheet: .22s;
+}
+
+[data-theme="light"] {
+  --paper: #fbf8f1;
+  --paper-2: #f4eee0;
+  --shadow-sm: 0 1px 2px rgba(13, 26, 18, .06);
+  --shadow: 0 10px 26px rgba(13, 26, 18, .09);
+  --shadow-lg: 0 22px 54px rgba(6, 20, 12, .18);
+}
+[data-theme="dark"] {
+  --paper: #101d17;
+  --paper-2: #14241c;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .45);
+  --shadow: 0 10px 26px rgba(0, 0, 0, .5);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, .62);
+}
+
+/* --- 1. الورق: صناديق الأقسام على ورق دافئ، والأخضر يبقى للتوقيع --- */
+.sec-box {
+  background-color: color-mix(in srgb, var(--sec, var(--accent)) 6%, var(--paper));
+  background-image: var(--grain);
+  border-color: color-mix(in srgb, var(--sec, var(--accent)) 16%, var(--line));
+  border-block-start: 0;
+  position: relative; overflow: hidden;
+}
+.sec-box::before {
+  content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 3px;
+  background: var(--sec, var(--accent)); opacity: .9;
+}
+.sec-box-head h3 { color: var(--text); }
+
+/* --- 3. لون القسم: تلوين خفيف للاسم والرقم --- */
+.sec-box-meta .n { color: color-mix(in srgb, var(--sec, var(--accent)) 78%, var(--text)); }
+
+/* --- 2. النعناع: الوصلات والأزرار الثانوية فقط --- */
+a:hover, .link-btn:hover, .crumbs button:hover, .author-line:hover, .linklike:hover {
+  color: var(--accent-2);
+}
+
+/* --- 4 + 6. حبيبات ورقية + فينييت بدل كرة ضبابية في الواجهة --- */
+.hero {
+  background-image: var(--grain), linear-gradient(135deg, var(--accent-soft), var(--paper) 62%);
+}
+.hero::after {
+  inset: 0; width: auto; height: auto; border-radius: inherit;
+  background: radial-gradient(125% 105% at 50% 0%, transparent 52%, rgba(6, 20, 12, .07) 100%);
+  filter: none; opacity: 1;
+}
+[data-theme="dark"] .hero::after {
+  background: radial-gradient(125% 105% at 50% 0%, transparent 50%, rgba(0, 0, 0, .38) 100%);
+}
+
+/* --- 5. الأغلفة كأجسام: حدّ داخلي + حافة صفحات --- */
+.cover {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55), 0 1px 2px rgba(13, 26, 18, .06);
+}
+.cover::after {
+  content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; height: 4px; z-index: 2;
+  pointer-events: none; opacity: .5;
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .95) 0 1px, rgba(13, 26, 18, .12) 1px 2px);
+}
+[data-theme="dark"] .cover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 1px 2px rgba(0, 0, 0, .5); }
+[data-theme="dark"] .cover::after { opacity: .22; }
+
+/* --- 9 + 10. ظلال مخضرّة وحواف موحّدة --- */
+.card { box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, .65); }
+[data-theme="dark"] .card { box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, .04); }
+.card:hover { box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, .6); }
+.toast { border-radius: var(--radius); }
+.bulkbar { border-radius: var(--radius-lg); }
+.reader-menu { border-radius: var(--radius); }
+
+/* --- 7 + 8. سلّم الخطوط: كوفي للعناوين، نسخي للنصوص --- */
+.hero h1 { font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
+.hero p {
+  font-family: var(--serif); font-size: 1.04rem; line-height: 1.85;
+  color: color-mix(in srgb, var(--text) 72%, var(--muted));
+}
+.sec-title { font-size: 1.15rem; line-height: 1.4; }
+.sec-box-head h3 { font-size: 1.02rem; line-height: 1.45; }
+.card .title { line-height: 1.5; }
+.card .meta { font-size: .75rem; line-height: 1.5; }
+.empty strong { font-size: 1.08rem; line-height: 1.5; }
+.empty p, .reader-note p, .hint {
+  font-family: var(--serif); font-size: 1rem; line-height: 1.9;
+}
+.coll-head h2 { line-height: 1.3; }
+.coll-head .cdesc, .coll-head .meta { font-family: var(--serif); }
+.footer-owner { font-family: var(--serif); line-height: 1.95; }
+
+/* --- 11. الوضع الليلي: أغلفة مهدّأة وحافة دافئة --- */
+[data-theme="dark"] .cover img { filter: brightness(.9) contrast(1.03) saturate(.96); }
+[data-theme="dark"] .sec-cover img { filter: brightness(.93); }
+[data-theme="dark"] .cover { box-shadow: inset 0 0 0 1px rgba(255, 236, 200, .07), 0 1px 2px rgba(0, 0, 0, .5); }
+[data-theme="dark"] .cover-fallback { background: linear-gradient(160deg, var(--paper-2), var(--surface-2)); }
+
+/* --- 12. درجات الحركة: شرائح 120ms، بطاقات 160ms، أوراق 220ms --- */
+.chip, .cat-pill, .col-item, .seg-btn, .tab, .qbtn, .icon-btn { transition-duration: var(--speed-chip); }
+.card, .series-card, .sec-box { transition-duration: var(--speed-card); }
+.sheet.bottom .sheet-card { animation-duration: var(--speed-sheet); }
+
+/* --- 13. الاختيار والتركيز --- */
+::selection { background: color-mix(in srgb, var(--accent) 24%, transparent); color: var(--text); }
+:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+.card:focus-visible, .cat-pill:focus-visible, .chip:focus-visible { outline-offset: 2px; }
+
+/* --- 14. هياكل التحميل على ورق لا رمادي --- */
+.sk-card { background: var(--paper); }
+.sk-cover, .sk-line {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--paper) 88%, var(--line)) 25%,
+    var(--paper-2) 45%,
+    color-mix(in srgb, var(--paper) 88%, var(--line)) 65%);
+  background-size: 400% 100%;
+  animation: sk 1.4s ease-in-out infinite;
+}
+
+/* --- الغلاف البديل: ورق أيضًا --- */
+.cover-fallback { background: linear-gradient(160deg, var(--paper-2), var(--surface-2)); }

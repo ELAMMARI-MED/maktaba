@@ -2,7 +2,7 @@
    الهدف: يفتح التطبيق ويتصفّح الفهرس بلا شبكة، مع تحديث صحيح عند توفّر الشبكة.
    ملفات درايف (الأغلفة والكتب) لا تُخزَّن هنا: تبقى من الشبكة كما هي.
    عند تغيير أي ملف من قشرة التطبيق، ارفع رقم الإصدار: كاش-N → كاش-N+1. */
-const CACHE = 'maktaba-cache-41';
+const CACHE = 'maktaba-cache-42';
 
 const SHELL = [
   './',
@@ -20,6 +20,7 @@ const SHELL = [
   './img/icon.svg',
   './img/favicon.svg',
   './manifest.webmanifest',
+  './data/catalog.json',
 ];
 
 self.addEventListener('install', (e) => {
