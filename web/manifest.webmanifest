@@ -1,0 +1,15 @@
+{
+  "name": "مكتبة محمد العماري",
+  "short_name": "مكتبة العماري",
+  "description": "مكتبة محمد العماري الرقمية: تصفّح واقرأ وحمّل الكتب من مجموعات محفوظة على Google Drive",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07140f",
+  "theme_color": "#15803d",
+  "icons": [
+    { "src": "img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15803d" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07140f" media="(prefers-color-scheme: dark)">
+<title>مكتبة محمد العماري — كتب للقراءة والتحميل</title>
+<meta name="description" content="مكتبة محمد العماري الرقمية: تصفّح واقرأ وحمّل الكتب من مجموعات محفوظة على Google Drive">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/app.css?v=41">
+</head>
+<body>
+
+<a class="skip-link" href="#content">تجاوز إلى المحتوى</a>
+
+<header class="topbar">
+  <a class="brand" href="#/" id="brand">
+    <span class="brand-mark">م</span>
+    <span class="brand-text">مكتبة محمد العماري</span>
+  </a>
+
+  <button class="nav-btn" id="collectionsBtn" title="المجموعات" aria-label="المجموعات" aria-expanded="false" aria-controls="collSheet">
+    <span class="nav-ico"></span><span class="nav-label">المجموعات</span>
+  </button>
+
+  <form class="search" id="searchForm" role="search" autocomplete="off">
+    <input id="q" type="search" name="q" placeholder="ابحث عن كتاب أو مؤلّف... (اضغط /)" aria-label="بحث">
+    <button type="submit" class="icon-btn" id="searchGo" title="ابحث" aria-label="ابحث"></button>
+    <button type="button" class="icon-btn ghost" id="clearQ" title="تفريغ البحث" aria-label="تفريغ"></button>
+    <div class="suggest" id="suggest" hidden></div>
+  </form>
+
+  <div class="top-actions">
+    <button class="icon-btn" id="themeBtn" title="تبديل الوضع الليلي/النهاري" aria-label="المظهر" aria-pressed="false"></button>
+  </div>
+</header>
+
+<section class="catbar" aria-label="الأقسام">
+  <div class="catbar-inner" id="catbar"></div>
+</section>
+
+<div class="layout">
+  <main class="content" id="content" tabindex="-1">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="toolbar" id="toolbar" hidden>
+      <div class="chips" id="kindChips"></div>
+      <div class="chips letters" id="letterJump" hidden></div>
+      <button class="btn small tools-btn" id="filtersBtn" aria-expanded="false" aria-controls="filtersSheet" title="الترتيب وحجم البطاقات">
+        <span>المرشّحات</span><span class="fbtn-n" id="filtersCount" hidden></span>
+      </button>
+      <button class="btn small tools-btn" id="selectBtn" aria-pressed="false" title="حدّد عدة كتب ثم نفّذ إجراءً عليها">
+        <span>تحديد</span>
+      </button>
+    </div>
+    <section class="grid" id="grid" aria-live="polite"></section>
+    <div class="empty" id="empty" hidden></div>
+  </main>
+</div>
+
+<!-- شريط الإجراءات عند تحديد عدة كتب -->
+<div class="bulkbar" id="bulkbar" hidden>
+  <span class="bulk-count" id="bulkCount">0</span>
+  <button class="btn small" id="bulkFav"><span>أضف للمفضلة</span></button>
+  <button class="btn small" id="bulkExport"><span>صدّر الروابط</span></button>
+  <button class="btn small ghost" id="bulkClear"><span>إلغاء</span></button>
+</div>
+
+<!-- درج المجموعات (يُفتح عند الحاجة بدل قائمة جانبية دائمة) -->
+<div class="sheet" id="collSheet" hidden>
+  <div class="sheet-card" role="dialog" aria-label="المجموعات">
+    <div class="sheet-head">
+      <h3>المجموعات</h3>
+      <button class="icon-btn ghost" id="collClose" aria-label="إغلاق"></button>
+    </div>
+    <p class="hint">اختر مجموعة لعرض فصولها وكتبها.</p>
+    <nav class="collections" id="collections"></nav>
+    <div class="side-foot">
+      <button class="link-btn" id="statsBtn">إحصاء المكتبة</button>
+      <button class="link-btn" id="exportFavs">تصدير المفضلة (ملف)</button>
+      <button class="link-btn" id="aboutBtn">عن المكتبة</button>
+    </div>
+  </div>
+</div>
+
+<!-- المرشّحات: الترتيب وحجم البطاقات (ورقة سفلية بدل صف طويل في الأعلى) -->
+<div class="sheet bottom" id="filtersSheet" hidden>
+  <div class="sheet-card" role="dialog" aria-label="المرشّحات">
+    <div class="sheet-head">
+      <h3>المرشّحات</h3>
+      <button class="icon-btn ghost" id="filtersClose" aria-label="إغلاق"></button>
+    </div>
+    <label class="field">
+      <span class="field-label">ترتيب</span>
+      <select id="sortSel">
+        <option value="name">الاسم (أ-ي)</option>
+        <option value="name-desc">الاسم (ي-أ)</option>
+        <option value="modified">الأحدث تعديلًا</option>
+        <option value="size">الحجم (الأصغر)</option>
+        <option value="size-desc">الحجم (الأكبر)</option>
+        <option value="kind">النوع</option>
+        <option value="issue">رقم العدد (السلاسل)</option>
+      </select>
+    </label>
+    <label class="field">
+      <span class="field-label">حجم البطاقات</span>
+      <div class="seg" id="densitySel" role="radiogroup" aria-label="حجم البطاقات">
+        <button type="button" class="seg-btn" data-density="sm" aria-pressed="false">صغير</button>
+        <button type="button" class="seg-btn" data-density="md" aria-pressed="true">متوسط</button>
+        <button type="button" class="seg-btn" data-density="lg" aria-pressed="false">كبير</button>
+      </div>
+    </label>
+    <label class="toggle-view">
+      <input type="checkbox" id="foldersFirst" checked> <span>المجلدات أولًا</span>
+    </label>
+    <label class="toggle-view" title="صفوف صغيرة بدل البطاقات">
+      <input type="checkbox" id="listView"> <span>عرض قائمة</span>
+    </label>
+    <label class="toggle-view" id="groupVolsWrap" title="اجمع مجلدات العمل الواحد في بطاقة واحدة">
+      <input type="checkbox" id="groupVols" checked> <span>تجميع المجلدات</span>
+    </label>
+    <button class="link-btn" id="filtersReset">إعادة الترتيب الافتراضي</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <p class="footer-owner"><span class="footer-mark" id="footerMark" aria-hidden="true"></span>هذه المكتبة جمع روابطها <strong class="footer-name">محمد العماري</strong> من مجموعات كتب لعلي مولا و غيره</p>
+</footer>
+
+<!-- عارض الكتاب -->
+<div class="reader" id="reader" hidden>
+  <div class="reader-bar">
+    <div class="reader-title" id="readerTitle"></div>
+    <div class="reader-actions">
+      <a class="btn primary" id="readerDown" target="_blank" rel="noopener" download><span>تحميل</span></a>
+      <a class="btn" id="readerOpen" target="_blank" rel="noopener"><span>فتح في درايف</span></a>
+      <button class="icon-btn" id="readerFav" title="أضف إلى المفضلة" aria-label="المفضلة" aria-pressed="false"></button>
+      <button class="icon-btn" id="readerFull" title="ملء الشاشة" aria-label="ملء الشاشة"></button>
+      <button class="icon-btn" id="readerMore" title="المزيد" aria-label="المزيد" aria-expanded="false" aria-controls="readerMenu"></button>
+      <button class="icon-btn" id="readerClose" title="إغلاق (Esc)" aria-label="إغلاق"></button>
+      <div class="reader-menu" id="readerMenu" hidden>
+        <button class="menu-item" id="readerShare" type="button"><span>مشاركة الكتاب</span></button>
+        <button class="menu-item" id="readerCopy" type="button"><span>نسخ الرابط</span></button>
+        <button class="menu-item" id="readerDone" type="button" aria-pressed="false"><span>تمّت قراءته</span></button>
+        <button class="menu-item" id="readerPrev" type="button"><span>السابق</span></button>
+        <button class="menu-item" id="readerNext" type="button"><span>التالي</span></button>
+        <button class="menu-item" id="readerKeys" type="button"><span>اختصارات لوحة المفاتيح</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="reader-sub" id="readerSub" hidden></div>
+  <div class="reader-body" id="readerBody"></div>
+</div>
+
+<!-- نوافذ المعلومات -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="modalTitle"></h3><button class="icon-btn" id="modalClose" aria-label="إغلاق"></button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="js/app.js?v=41"></script>
+<script>
+/* تسجيل عامل الخدمة: تشغيل بلا شبكة. أي فشل يُرسَل لسجل السيرفر ولا يظهر في الصفحة. */
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').then(function () {
+      // عامل خدمة جديد أخذ السيطرة (بعد تحديث الواجهة): إعادة تحميل واحدة تكفي
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        try {
+          if (sessionStorage.getItem('mk.reloaded')) return;
+          sessionStorage.setItem('mk.reloaded', '1');
+          location.reload();
+        } catch (x) {}
+      });
+    }).catch(function (e) {
+      try { fetch('/api/diag?m=' + encodeURIComponent('sw: ' + (e && e.message || e))); } catch (x) {}
+    });
+  });
+}
+</script>
+<script>
+/* مُبلِّغ صامت — لا يظهر أي صندوق في الصفحة: يرسل الأخطاء إلى سجل السيرفر فقط (حتى 5 لكل تحميل) */
+(function () {
+  var sent = 0;
+  function report(m) { if (sent++ > 5) return; try { fetch('/api/diag?m=' + encodeURIComponent(String(m).slice(0, 300))); } catch (e) {} }
+  window.addEventListener('error', function (e) {
+    var t = e.target;
+    report((t && t.tagName) ? 'فشل تحميل ' + t.tagName + ': ' + (t.src || t.href || '') : (e.message || 'خطأ غير معروف'));
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    report('rejection: ' + ((e.reason && (e.reason.message || e.reason)) || ''));
+  });
+})();
+</script>
+</body>
+</html>

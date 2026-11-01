@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Runtime logs
+*.log
+
+# Raw crawl dumps (large, regenerable with scripts/crawl.py)
+data/all_roots_d4.json
+data/depth2.json
+data/depth3_all.json
+data/new_roots.json
+data/new_roots2.json
+data/new_publishers.json
+data/new_shabaka.json
+data/tmp_new_catalog.json
+
+# Catalog snapshots kept for comparison only
+data/catalog.prev.json
+data/catalog.before_titles.json
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local node tooling (jsdom test harness lives outside the repo)
+node_modules/
