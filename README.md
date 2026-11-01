@@ -17,9 +17,17 @@ frame and every book has its own download button.
 
 ## Run
 
-    bash ~/start-maktaba.sh              # http://127.0.0.1:8112  (or http://<phone-ip>:8112)
+    git clone https://github.com/ELAMMARI-MED/maktaba.git
+    cd maktaba && ./start.sh             # http://127.0.0.1:8112  (or http://<phone-ip>:8112)
     pkill -f "python server[.]py"        # stop
-    cd ~/maktaba && python server.py     # same thing, direct
+    python server.py                     # same thing, direct
+
+Requirements: Python 3.9+ (stdlib only, no pip installs) and Node 18+ only if you want to run the
+tests. The catalog ships with the repo, so it runs straight after cloning.
+
+What is *not* in the repo: the raw crawl dumps (`all_roots_d4.json` & friends, ~65 MB) and the catalog
+snapshots. They are regenerable with `scripts/crawl.py` + `scripts/size_probe.py`, and `.gitignore`
+keeps them out.
 
 ## What is indexed now
 
